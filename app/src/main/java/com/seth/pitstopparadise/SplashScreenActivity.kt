@@ -35,7 +35,7 @@ class SplashScreenActivity : AppCompatActivity() {
             if (token.isNullOrEmpty()) {
                 startActivity(Intent(this@SplashScreenActivity, LoginActivity::class.java))
             } else {
-                startActivity(Intent(this@SplashScreenActivity, PitstopActivity::class.java))
+                startActivity(Intent(this@SplashScreenActivity, MainActivity::class.java))
             }
 
             overridePendingTransition(0, 0)

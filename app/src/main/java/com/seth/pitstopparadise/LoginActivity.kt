@@ -51,7 +51,7 @@ class LoginActivity : AppCompatActivity() {
             authViewModel.uiMessage.collectLatest { msg ->
                 showToast(msg)
                 if (msg == "Login success!") {
-                    startActivity(Intent(this@LoginActivity, PitstopActivity::class.java))
+                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                     finish()
                 }
             }

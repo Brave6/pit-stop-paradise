@@ -1,10 +1,13 @@
 package com.seth.pitstopparadise.retrofit
 
 import com.seth.pitstopparadise.data.ApiResponse
+import com.seth.pitstopparadise.data.BookingRequest
+import com.seth.pitstopparadise.data.BookingResponse
 import com.seth.pitstopparadise.data.LoginRequest
 import com.seth.pitstopparadise.data.LoginResponse
 import com.seth.pitstopparadise.data.ProfileResponse
 import com.seth.pitstopparadise.data.RegisterRequest
+import com.seth.pitstopparadise.domain.model.Product
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -21,4 +24,9 @@ interface ApiService {
     @GET("auth/profile")
     suspend fun getProfile(@Header("Authorization") token: String): Response<ProfileResponse>
 
+    @GET("products")
+    suspend fun getProducts(): Response<List<Product>>
+
+    @POST("bookings")
+    suspend fun createBooking(@Body request: BookingRequest): Response<BookingResponse>
 }
