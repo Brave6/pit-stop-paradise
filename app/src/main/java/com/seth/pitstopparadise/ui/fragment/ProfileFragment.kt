@@ -1,60 +1,133 @@
 package com.seth.pitstopparadise.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.button.MaterialButton
+import com.seth.pitstopparadise.LoginActivity
 import com.seth.pitstopparadise.R
+import com.seth.pitstopparadise.databinding.FragmentProfileBinding
+import com.seth.pitstopparadise.ui.adapter.BookingHistoryAdapter
+import com.seth.pitstopparadise.viewmodel.ProfileViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ProfileFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+@AndroidEntryPoint
 class ProfileFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentProfileBinding? = null
+    private val binding get() = _binding!!
+
+    private val viewModel: ProfileViewModel by viewModels()
+
+    private lateinit var bookingAdapter: BookingHistoryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+    ): View {
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ProfileFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        bookingAdapter = BookingHistoryAdapter()
+        binding.recyclerBookingHistory.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerBookingHistory.adapter = bookingAdapter
+
+        observeState()
+
+        binding.buttonLogout.setOnClickListener {
+            showLogoutConfirmationDialog()
+        }
+
+        // Trigger initial load
+        viewModel.loadUserInfo()
+        viewModel.loadBookingHistory()
+    }
+
+    private fun observeState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.userInfo.collectLatest { user ->
+                        user?.let {
+                            binding.textUserName.text = it.email
+                            binding.textEmail.text = it.email
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel.bookingHistory.collectLatest { bookings ->
+                        bookingAdapter.submitList(bookings)
+                    }
+                }
+
+                launch {
+                    viewModel.logoutComplete.collectLatest { isComplete ->
+                        if (isComplete) {
+                            val intent = Intent(requireContext(), LoginActivity::class.java).apply {
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            }
+                            startActivity(intent)
+                            requireActivity().finish()
+                        }
+                    }
                 }
             }
+        }
+    }
+
+    private fun showLogoutConfirmationDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.logout_alert, null)
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.setOnShowListener {
+            hideSystemUI()
+        }
+
+        val proceedButton = dialogView.findViewById<MaterialButton>(R.id.proceedButton)
+        val cancelButton = dialogView.findViewById<MaterialButton>(R.id.noButton)
+
+        proceedButton.setOnClickListener {
+            viewModel.logout()
+            dialog.dismiss()
+        }
+
+        cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun hideSystemUI() {
+        requireActivity().window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        or View.SYSTEM_UI_FLAG_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

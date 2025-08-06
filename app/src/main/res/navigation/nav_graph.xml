@@ -34,7 +34,17 @@
         android:id="@+id/nav_offers"
         android:name="com.seth.pitstopparadise.ui.fragment.OffersFragment"
         android:label="Offers"
-        tools:layout="@layout/fragment_offers" />
+        tools:layout="@layout/fragment_offers">
+        <action
+            android:id="@+id/action_offersFragment_to_bookingsFragment"
+            app:destination="@id/nav_bookings">
+            <argument
+                android:name="product"
+                app:argType="com.seth.pitstopparadise.domain.model.Product"
+                app:nullable="true"
+                android:defaultValue="@null"/>
+        </action>    </fragment>
+
 
     <fragment
         android:id="@+id/nav_profile"

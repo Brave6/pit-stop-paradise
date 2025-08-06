@@ -7,7 +7,10 @@ import com.seth.pitstopparadise.data.LoginRequest
 import com.seth.pitstopparadise.data.LoginResponse
 import com.seth.pitstopparadise.data.ProfileResponse
 import com.seth.pitstopparadise.data.RegisterRequest
+import com.seth.pitstopparadise.domain.model.Booking
+import com.seth.pitstopparadise.domain.model.Offer
 import com.seth.pitstopparadise.domain.model.Product
+import com.seth.pitstopparadise.domain.model.User
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -29,4 +32,11 @@ interface ApiService {
 
     @POST("bookings")
     suspend fun createBooking(@Body request: BookingRequest): Response<BookingResponse>
+
+    @GET("offers")
+    suspend fun getOffers(): Response<List<Offer>>
+
+    @GET("bookings")
+    suspend fun getUserBookings(@Header("Authorization") token: String): Response<List<Booking>>
+
 }

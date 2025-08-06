@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.seth.pitstopparadise.R
@@ -47,7 +49,15 @@ class BookingsFragment : Fragment() {
                 .into(binding.imageProduct)
 
             binding.textTitle.text = product.title
-            binding.textPrice.text = "₱${product.price} / ${product.duration}"
+            if (product.discountedPrice != null) {
+                val original = "₱${product.price}"
+                val discounted = "₱${product.discountedPrice} / ${product.duration}"
+                val styledText = "<s>$original</s> <b>$discounted</b>"
+                binding.textPrice.text = HtmlCompat.fromHtml(styledText, HtmlCompat.FROM_HTML_MODE_LEGACY)
+            } else {
+                binding.textPrice.text = "₱${product.price} / ${product.duration}"
+            }
+
 
             // Enable confirm booking
             binding.buttonConfirmBooking.isEnabled = true
@@ -91,6 +101,8 @@ class BookingsFragment : Fragment() {
                         binding.buttonConfirmBooking.isEnabled = true
                         binding.buttonConfirmBooking.text = "Confirm Booking"
                         Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                        findNavController().popBackStack() // This returns to HomeFragment
+                        //  clearBookingForm() // clear
                         viewModel.resetState()
                     }
 
@@ -122,9 +134,32 @@ class BookingsFragment : Fragment() {
         val minute = calendar.get(Calendar.MINUTE)
 
         TimePickerDialog(requireContext(), { _, h, m ->
-            binding.editTimeSlot.setText(String.format("%02d:%02d", h, m))
-        }, hour, minute, true).show()
+            val isPM = h >= 12
+            val hourFormatted = if (h % 12 == 0) 12 else h % 12
+            val amPm = if (isPM) "PM" else "AM"
+            val timeFormatted = String.format("%02d:%02d %s", hourFormatted, m, amPm)
+
+            binding.editTimeSlot.setText(timeFormatted)
+        }, hour, minute, false).show() // false = 12-hour format
     }
+
+    private fun clearBookingForm() {
+        binding.editName.text?.clear()
+        binding.editPhone.text?.clear()
+        binding.editDate.text?.clear()
+        binding.editTimeSlot.text?.clear()
+
+        // Optional: Clear product info
+        binding.textTitle.text = ""
+        binding.textPrice.text = ""
+        Glide.with(requireContext())
+            .load(R.drawable.pitstop_new) // fallback image
+            .into(binding.imageProduct)
+
+        binding.buttonConfirmBooking.isEnabled = false
+    }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

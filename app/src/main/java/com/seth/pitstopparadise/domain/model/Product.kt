@@ -18,5 +18,9 @@ data class Product(
 
     val description: String,
 
-    val imageUrl: String
+    val imageUrl: String,
+
+    @SerializedName("discountedPrice")
+    val discountedPrice: Int? = null // <-- safe, optional field
 ) : Parcelable
+
