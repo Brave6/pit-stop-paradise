@@ -62,7 +62,7 @@ class ProfileFragment : Fragment() {
                 launch {
                     viewModel.userInfo.collectLatest { user ->
                         user?.let {
-                            binding.textUserName.text = it.email
+                            binding.textUserName.text = it.username
                             binding.textEmail.text = it.email
                         }
                     }

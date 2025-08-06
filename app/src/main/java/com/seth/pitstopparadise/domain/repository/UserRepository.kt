@@ -16,7 +16,8 @@ class UserRepository @Inject constructor(
         if (response.isSuccessful) {
             val profile = response.body() ?: throw Exception("Empty profile")
             return User(
-                id = profile._id,         // ✅ fix here
+                id = profile._id,
+                username = profile.username,
                 email = profile.email
             )
         } else {

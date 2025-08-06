@@ -32,8 +32,9 @@ class UserViewModel @Inject constructor(
                 val user = userRepository.getUserInfo()
                 _profileState.value = ProfileUiState.Success(
                     ProfileResponse(
-                        _id = "Profile fetched successfully",
-                        email = user.id
+                        _id = user.id,
+                        email = user.email,
+                        username = user.username
                     )
                 )
             } catch (e: Exception) {

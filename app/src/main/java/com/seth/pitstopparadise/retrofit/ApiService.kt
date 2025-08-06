@@ -10,7 +10,6 @@ import com.seth.pitstopparadise.data.RegisterRequest
 import com.seth.pitstopparadise.domain.model.Booking
 import com.seth.pitstopparadise.domain.model.Offer
 import com.seth.pitstopparadise.domain.model.Product
-import com.seth.pitstopparadise.domain.model.User
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -24,7 +23,7 @@ interface ApiService {
     @POST("auth/login")
     suspend fun login(@Body request: LoginRequest): Response<LoginResponse>
 
-    @GET("auth/profile")
+    @GET("user/profile")
     suspend fun getProfile(@Header("Authorization") token: String): Response<ProfileResponse>
 
     @GET("products")
