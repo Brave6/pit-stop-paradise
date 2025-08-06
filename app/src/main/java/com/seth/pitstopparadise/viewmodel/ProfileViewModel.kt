@@ -30,16 +30,26 @@ class ProfileViewModel @Inject constructor(
     private val _logoutComplete = MutableStateFlow(false)
     val logoutComplete: StateFlow<Boolean> = _logoutComplete.asStateFlow()
 
+    private val _sessionExpired = MutableStateFlow(false)
+    val sessionExpired: StateFlow<Boolean> = _sessionExpired.asStateFlow()
+
+
     fun loadUserInfo() {
         viewModelScope.launch {
             try {
                 val user = userRepository.getUserInfo()
                 _userInfo.value = user
             } catch (e: Exception) {
-                e.printStackTrace()
+                if (e.localizedMessage?.contains("401") == true || e.localizedMessage?.contains("Session expired") == true) {
+                    sessionManager.clearToken()
+                    _sessionExpired.value = true
+                } else {
+                    e.printStackTrace()
+                }
             }
         }
     }
+
 
     fun loadBookingHistory() {
         viewModelScope.launch {
@@ -47,7 +57,12 @@ class ProfileViewModel @Inject constructor(
                 val bookings = bookingRepository.getUserBookings()
                 _bookingHistory.value = bookings
             } catch (e: Exception) {
-                e.printStackTrace()
+                if (e.localizedMessage?.contains("401") == true || e.localizedMessage?.contains("Session expired") == true) {
+                    sessionManager.clearToken()
+                    _sessionExpired.value = true
+                } else {
+                    e.printStackTrace()
+                }
             }
         }
     }

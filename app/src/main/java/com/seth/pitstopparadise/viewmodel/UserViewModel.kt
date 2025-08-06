@@ -20,6 +20,7 @@ class UserViewModel @Inject constructor(
         object Loading : ProfileUiState()
         data class Success(val profile: ProfileResponse) : ProfileUiState()
         data class Error(val message: String) : ProfileUiState()
+        object SessionExpired : ProfileUiState() // ✅ Handle token expiration
     }
 
     private val _profileState = MutableStateFlow<ProfileUiState>(ProfileUiState.Idle)
@@ -38,7 +39,11 @@ class UserViewModel @Inject constructor(
                     )
                 )
             } catch (e: Exception) {
-                _profileState.value = ProfileUiState.Error("Error: ${e.localizedMessage}")
+                if (e.localizedMessage?.contains("Session expired") == true) {
+                    _profileState.value = ProfileUiState.SessionExpired // ✅ trigger redirect in UI
+                } else {
+                    _profileState.value = ProfileUiState.Error("Error: ${e.localizedMessage}")
+                }
             }
         }
     }

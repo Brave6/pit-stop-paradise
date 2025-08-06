@@ -21,7 +21,13 @@ class UserRepository @Inject constructor(
                 email = profile.email
             )
         } else {
-            throw Exception("Failed to load user profile: ${response.code()}")
+            if (response.code() == 401) {
+                // Token is invalid or expired
+                sessionManager.clearToken() // ❗ clear token to prevent reuse
+                throw Exception("Session expired. Please login again.")
+            } else {
+                throw Exception("Failed to load user profile: ${response.code()}")
+            }
         }
     }
 }

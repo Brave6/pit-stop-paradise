@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -80,6 +81,19 @@ class ProfileFragment : Fragment() {
                             val intent = Intent(requireContext(), LoginActivity::class.java).apply {
                                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                             }
+                            startActivity(intent)
+                            requireActivity().finish()
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel.sessionExpired.collectLatest { expired ->
+                        if (expired) {
+                            val intent = Intent(requireContext(), LoginActivity::class.java).apply {
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            }
+                            Toast.makeText(requireContext(), "Session expired. Please log in again.", Toast.LENGTH_LONG).show()
                             startActivity(intent)
                             requireActivity().finish()
                         }
