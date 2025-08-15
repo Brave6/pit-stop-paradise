@@ -30,7 +30,7 @@ interface ApiService {
     suspend fun getProducts(): Response<List<Product>>
 
     @POST("bookings")
-    suspend fun createBooking(@Body request: BookingRequest): Response<BookingResponse>
+    suspend fun createBooking(@Header("Authorization") token: String,@Body request: BookingRequest): Response<BookingResponse>
 
     @GET("offers")
     suspend fun getOffers(): Response<List<Offer>>

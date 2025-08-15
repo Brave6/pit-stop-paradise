@@ -15,6 +15,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.button.MaterialButton
 import com.seth.pitstopparadise.LoginActivity
+import com.seth.pitstopparadise.BuildConfig;
 import com.seth.pitstopparadise.R
 import com.seth.pitstopparadise.databinding.FragmentProfileBinding
 import com.seth.pitstopparadise.ui.adapter.BookingHistoryAdapter
@@ -42,6 +43,8 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.textAppVersion.text = "Version ${BuildConfig.VERSION_NAME}"
+
         bookingAdapter = BookingHistoryAdapter()
         binding.recyclerBookingHistory.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerBookingHistory.adapter = bookingAdapter
@@ -71,9 +74,17 @@ class ProfileFragment : Fragment() {
 
                 launch {
                     viewModel.bookingHistory.collectLatest { bookings ->
-                        bookingAdapter.submitList(bookings)
+                        if (bookings.isEmpty()) {
+                            binding.recyclerBookingHistory.visibility = View.GONE
+                            binding.textEmptyBookings.visibility = View.VISIBLE
+                        } else {
+                            binding.recyclerBookingHistory.visibility = View.VISIBLE
+                            binding.textEmptyBookings.visibility = View.GONE
+                            bookingAdapter.submitList(bookings)
+                        }
                     }
                 }
+
 
                 launch {
                     viewModel.logoutComplete.collectLatest { isComplete ->

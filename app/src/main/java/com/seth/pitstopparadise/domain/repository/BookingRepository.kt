@@ -11,7 +11,13 @@ class BookingRepository @Inject constructor(
     private val apiService: ApiService,
     private val sessionManager: SessionManager
 ) {
-    suspend fun createBooking(request: BookingRequest) = apiService.createBooking(request)
+    suspend fun createBooking(request: BookingRequest) {
+        val token = sessionManager.token.first() ?: throw Exception("No token found")
+        val response = apiService.createBooking("Bearer $token", request)
+        if (!response.isSuccessful) {
+            throw Exception("Failed to create booking: ${response.code()} ${response.message()}")
+        }
+    }
 
     suspend fun getUserBookings(): List<Booking> {
         val token = sessionManager.token.first() ?: throw Exception("No token found")

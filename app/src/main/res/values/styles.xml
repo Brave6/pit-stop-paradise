@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- res/values/styles.xml -->
+    <style name="CustomScrollbarStyle">
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_thumb</item>
+        <item name="android:scrollbarTrackVertical">@drawable/scrollbar_track</item>
+        <item name="android:scrollbarStyle">outsideOverlay</item> <!-- or other styles like insideOverlay, outsideInset, insideInset -->
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:scrollbarSize">8dp</item> <!-- Optional: Adjust size -->
+    </style>
+
+    <!-- Circular Image Style -->
+    <style name="CircularImage">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+</resources>

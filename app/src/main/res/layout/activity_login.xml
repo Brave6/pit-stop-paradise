@@ -130,7 +130,7 @@
             android:textSize="23sp"
             android:textColor="@color/white"
             app:backgroundTint="#1C312E"
-            app:rippleColor="#FFA726"
+            app:rippleColor="@color/white"
             android:fontFamily="@font/hauser"
             app:cornerRadius="12dp"
             app:layout_constraintTop_toBottomOf="@id/passwordLayout"
