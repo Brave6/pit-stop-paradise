@@ -23,6 +23,15 @@ The application is built using the **MVVM (Model-View-ViewModel)** architecture 
 - **Navigation**: [Jetpack Navigation Component](https://developer.android.com/guide/navigation) for handling in-app navigation between fragments.
 - **Local Storage**: [Jetpack DataStore](https://developer.android.com/topic/libraries/architecture/datastore) for storing the user's authentication token.
 
+## Backend & API  
+
+Pit Stop Paradise is powered by a custom backend:  
+
+- **Server:** Node.js (Express) for RESTful API development  
+- **Database:** MongoDB Atlas for secure, cloud-hosted data storage  
+- **Authentication:** JWT (JSON Web Token) for secure, stateless authentication  
+- **Deployment:** API endpoints integrated with the Android app using Retrofit  
+
 ## Project Structure
 The project is organized into modular packages, following clean architecture principles:
 
@@ -37,6 +46,12 @@ The project is organized into modular packages, following clean architecture pri
   - **`fragment`**: Individual screens implemented as Fragments (e.g., `HomeFragment`, `ProfileFragment`).
 - **`utils`**: Utility classes, including `SessionManager` for handling user authentication tokens.
 - **`viewmodel`**: `ViewModel` classes that hold and manage UI-related data, interacting with repositories to fetch and update data.
+
+## Tech Stack  
+
+- **Frontend (Android App):** Kotlin, XML, MVVM, Hilt, Retrofit, Jetpack Navigation, DataStore  
+- **Backend (API):** Node.js, Express, JWT Authentication  
+- **Database:** MongoDB Atlas (cloud-based, scalable storage)  
 
 ## Setup and Installation
 
