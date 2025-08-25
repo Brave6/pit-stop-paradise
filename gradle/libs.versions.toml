@@ -24,12 +24,30 @@ lottie = "6.1.0"
 roomKtx = "2.6.1"
 navigationFragmentKtx = "2.9.3"
 navigationUiKtx = "2.9.3"
-firebaseFirestoreKtx = "26.0.0"
+mockito = "5.2.0"
+mockitoKotlin = "6.0.0"
+coroutinesTest = "1.7.3"
+archCore = "2.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
+mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockito" }
+coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "archCore" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version = "3.5.1" }
+espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version = "3.5.1" }
+espresso-intents = { group = "androidx.test.espresso", name = "espresso-intents", version = "3.5.1" }
+
+androidx-test-core = { group = "androidx.test", name = "core-ktx", version = "1.5.0" }
+androidx-test-ext = { group = "androidx.test.ext", name = "junit-ktx", version = "1.1.5" }
+androidx-test-rules = { group = "androidx.test", name = "rules", version = "1.5.0" }
+
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }

@@ -1,5 +1,6 @@
 package com.seth.pitstopparadise.ui.fragment
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
@@ -8,9 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.text.HtmlCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -18,6 +22,7 @@ import com.seth.pitstopparadise.R
 import com.seth.pitstopparadise.databinding.FragmentBookingsBinding
 import com.seth.pitstopparadise.viewmodel.BookingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 @AndroidEntryPoint
@@ -49,18 +54,28 @@ class BookingsFragment : Fragment() {
                 .into(binding.imageProduct)
 
             binding.textTitle.text = product.title
+
             if (product.discountedPrice != null) {
-                val original = "₱${product.price}"
-                val discounted = "₱${product.discountedPrice} / ${product.duration}"
+                val original = getString(R.string.price_currency, product.price)
+                val discounted = getString(
+                    R.string.price_currency_with_duration,
+                    product.discountedPrice,
+                    product.duration
+                )
                 val styledText = "<s>$original</s> <b>$discounted</b>"
-                binding.textPrice.text = HtmlCompat.fromHtml(styledText, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                binding.textPrice.text =
+                    HtmlCompat.fromHtml(styledText, HtmlCompat.FROM_HTML_MODE_LEGACY)
             } else {
-                binding.textPrice.text = "₱${product.price} / ${product.duration}"
+                binding.textPrice.text = getString(
+                    R.string.price_currency_with_duration,
+                    product.price,
+                    product.duration
+                )
             }
 
-
-            // Enable confirm booking
-            binding.buttonConfirmBooking.isEnabled = true
+            // Enable confirm booking when fields are valid
+            binding.buttonConfirmBooking.isEnabled = false
+            setupFieldValidation()
 
             binding.buttonConfirmBooking.setOnClickListener {
                 viewModel.confirmBooking(
@@ -73,48 +88,67 @@ class BookingsFragment : Fragment() {
             }
 
         } else {
-            // Handle the case where no product was passed
-            binding.textTitle.text = "No product selected"
+            // Handle missing product
+            binding.textTitle.text = getString(R.string.no_product_selected)
             binding.textPrice.text = ""
-
             Glide.with(requireContext())
-                .load(R.drawable.pitstop_new) // Use a local placeholder drawable
+                .load(R.drawable.pitstop_new)
                 .into(binding.imageProduct)
 
-            // Disable confirm booking
             binding.buttonConfirmBooking.isEnabled = false
         }
 
-        // Set up date and time pickers (these can always be enabled)
+        // Set up date & time pickers
         binding.editDate.setOnClickListener { showDatePicker() }
         binding.editTimeSlot.setOnClickListener { showTimePicker() }
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.bookingState.collect { state ->
-                when (state) {
-                    is BookingsViewModel.BookingUiState.Loading -> {
-                        binding.buttonConfirmBooking.isEnabled = false
-                        binding.buttonConfirmBooking.text = "Booking..."
-                    }
+        // Observe ViewModel state safely with repeatOnLifecycle
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.bookingState.collect { state ->
+                    when (state) {
+                        is BookingsViewModel.BookingUiState.Loading -> {
+                            binding.buttonConfirmBooking.isEnabled = false
+                            binding.buttonConfirmBooking.text = getString(R.string.booking_in_progress)
+                        }
+                        is BookingsViewModel.BookingUiState.Success -> {
+                            binding.buttonConfirmBooking.isEnabled = true
+                            binding.buttonConfirmBooking.text = getString(R.string.confirm_booking)
 
-                    is BookingsViewModel.BookingUiState.Success -> {
-                        binding.buttonConfirmBooking.isEnabled = true
-                        binding.buttonConfirmBooking.text = "Confirm Booking"
-                        Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
-                        findNavController().popBackStack() // This returns to HomeFragment
-                        //  clearBookingForm() // clear
-                        viewModel.resetState()
-                    }
+                            Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                            announceMessage(state.message)
 
-                    is BookingsViewModel.BookingUiState.Error -> {
-                        binding.buttonConfirmBooking.isEnabled = true
-                        binding.buttonConfirmBooking.text = "Confirm Booking"
-                        Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
-                        viewModel.resetState()
-                    }
+                            findNavController().popBackStack()
+                            clearBookingForm()
+                            viewModel.resetState()
+                        }
+                        is BookingsViewModel.BookingUiState.Error -> {
+                            binding.buttonConfirmBooking.isEnabled = true
+                            binding.buttonConfirmBooking.text = getString(R.string.confirm_booking)
 
-                    else -> Unit
+                            Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                            announceMessage(state.message)
+
+                            viewModel.resetState()
+                        }
+                        else -> Unit
+                    }
                 }
+            }
+        }
+    }
+
+    private fun setupFieldValidation() {
+        val fields = listOf(
+            binding.editName,
+            binding.editPhone,
+            binding.editDate,
+            binding.editTimeSlot
+        )
+
+        fields.forEach { editText ->
+            editText.doOnTextChanged { _, _, _, _ ->
+                binding.buttonConfirmBooking.isEnabled = fields.all { it.text?.isNotEmpty() == true }
             }
         }
     }
@@ -125,10 +159,11 @@ class BookingsFragment : Fragment() {
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         DatePickerDialog(requireContext(), { _, y, m, d ->
-            binding.editDate.setText("$y-${m + 1}-$d")
+            binding.editDate.setText(getString(R.string.date_format, y, m + 1, d))
         }, year, month, day).show()
     }
 
+    @SuppressLint("DefaultLocale")
     private fun showTimePicker() {
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
@@ -140,7 +175,7 @@ class BookingsFragment : Fragment() {
             val timeFormatted = String.format("%02d:%02d %s", hourFormatted, m, amPm)
 
             binding.editTimeSlot.setText(timeFormatted)
-        }, hour, minute, false).show() // false = 12-hour format
+        }, hour, minute, false).show()
     }
 
     private fun clearBookingForm() {
@@ -148,18 +183,12 @@ class BookingsFragment : Fragment() {
         binding.editPhone.text?.clear()
         binding.editDate.text?.clear()
         binding.editTimeSlot.text?.clear()
-
-        // Optional: Clear product info
-        binding.textTitle.text = ""
-        binding.textPrice.text = ""
-        Glide.with(requireContext())
-            .load(R.drawable.pitstop_new) // fallback image
-            .into(binding.imageProduct)
-
         binding.buttonConfirmBooking.isEnabled = false
     }
 
-
+    private fun announceMessage(message: String) {
+        binding.root.announceForAccessibility(message)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

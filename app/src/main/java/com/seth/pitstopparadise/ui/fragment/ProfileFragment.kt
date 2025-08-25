@@ -121,10 +121,6 @@ class ProfileFragment : Fragment() {
             .setCancelable(true)
             .create()
 
-        dialog.setOnShowListener {
-            hideSystemUI()
-        }
-
         val proceedButton = dialogView.findViewById<MaterialButton>(R.id.proceedButton)
         val cancelButton = dialogView.findViewById<MaterialButton>(R.id.noButton)
 
@@ -140,16 +136,6 @@ class ProfileFragment : Fragment() {
         dialog.show()
     }
 
-    private fun hideSystemUI() {
-        requireActivity().window.decorView.systemUiVisibility = (
-                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        or View.SYSTEM_UI_FLAG_FULLSCREEN
-                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                )
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -35,9 +35,17 @@ class BookingsViewModel @Inject constructor(
             _bookingState.value = BookingUiState.Loading
             try {
                 val request = BookingRequest(name, phone, date, time, productId)
-                bookingRepository.createBooking(request) // will throw if fails
+                val response = bookingRepository.createBooking(request)
 
-                _bookingState.value = BookingUiState.Success("Booking created successfully")
+                if (response.isSuccessful) {
+                    _bookingState.value = BookingUiState.Success(
+                        response.body()?.message ?: "Booking created successfully"
+                    )
+                } else {
+                    _bookingState.value = BookingUiState.Error(
+                        "Error: ${response.code()} ${response.message()}"
+                    )
+                }
             } catch (e: Exception) {
                 _bookingState.value = BookingUiState.Error("Error: ${e.localizedMessage}")
             }
@@ -48,4 +56,3 @@ class BookingsViewModel @Inject constructor(
         _bookingState.value = BookingUiState.Idle
     }
 }
-
