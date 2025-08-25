@@ -53,6 +53,20 @@ The project is organized into modular packages, following clean architecture pri
 - **Backend (API):** Node.js, Express, JWT Authentication  
 - **Database:** MongoDB Atlas (cloud-based, scalable storage)  
 
+## Accessibility (TalkBack Support)
+
+Pit Stop Paradise includes **accessibility features** to ensure usability for all users:
+
+- **Screen Reader Support (TalkBack)**  
+  - All products in the list are announced with their **title, price, and duration**.  
+  - Booking confirmations trigger an **automatic spoken announcement** (e.g., “Booking confirmed”), so users receive immediate feedback.  
+- **Form Accessibility**  
+  - Input fields include clear hints for TalkBack users.  
+  - The **Confirm Booking** button is only enabled when the form is valid, reducing confusion for users navigating via screen readers.
+
+These improvements demonstrate attention to **inclusive design and accessibility best practices**, an important skill for modern Android development.
+
+
 ## Setup and Installation
 
 To build and run the project, follow these steps:
