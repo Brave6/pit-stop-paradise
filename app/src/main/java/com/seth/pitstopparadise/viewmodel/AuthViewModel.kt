@@ -12,46 +12,50 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-open class AuthViewModel @Inject constructor(
+class AuthViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val apiService: ApiService
 ) : ViewModel() {
 
-    private val _uiMessage = MutableSharedFlow<String>()
-    val uiMessage: SharedFlow<String> = _uiMessage
-
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading
-
     private val TAG = "AuthViewModel"
+
+    private val _loginState = MutableStateFlow<LoginUiState>(LoginUiState.Idle)
+    val loginState: StateFlow<LoginUiState> = _loginState.asStateFlow()
 
     fun login(email: String, password: String) {
         viewModelScope.launch {
-            _isLoading.value = true
+            _loginState.value = LoginUiState.Loading
             Log.d(TAG, "login called with: email=$email, password=$password")
             try {
                 val request = LoginRequest(email, password)
-                val response = apiService.login(request) // ✅ Use injected API service
+                val response = apiService.login(request)
                 Log.d(TAG, "API response: $response")
 
                 if (response.isSuccessful) {
                     val token = response.body()?.token.orEmpty()
+
                     Log.d(TAG, "Login successful. Token: $token")
                     sessionManager.saveToken(token)
-                    _uiMessage.emit("Login success!")
+                    _loginState.value = LoginUiState.Success // ✅ no email/username
                 } else {
                     val errorBody = response.errorBody()?.string()
-                    Log.e(TAG, "Login failed: code=${response.code()}, error=$errorBody")
-                    _uiMessage.emit("Login failed: ${errorBody ?: response.message()}")
+                    val errorMessage = "Login failed: code=${response.code()}, message=${errorBody ?: response.message()}"
+                    Log.e(TAG, errorMessage)
+                    _loginState.value = LoginUiState.Error(errorMessage)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Exception during login", e)
-                _uiMessage.emit("Network error: ${e.localizedMessage ?: "Unknown error"}")
-            } finally {
-                _isLoading.value = false
+                _loginState.value = LoginUiState.Error(e.localizedMessage ?: "Unknown error")
             }
         }
     }
 
     fun getToken(): Flow<String?> = sessionManager.token
+}
+
+sealed class LoginUiState {
+    object Idle : LoginUiState()
+    object Loading : LoginUiState()
+    object Success : LoginUiState()
+    data class Error(val message: String) : LoginUiState()
 }

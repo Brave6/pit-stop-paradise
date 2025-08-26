@@ -17,7 +17,12 @@ import javax.inject.Singleton
 )
 object TestNetworkModule {
 
-    lateinit var mockBaseUrl: String
+    // This will be assigned in tests
+    var mockWebServerUrl: String = "http://10.0.2.2:8080/"
+
+    @Singleton
+    @Provides
+    fun provideBaseUrl(): String = mockWebServerUrl
 
     @Singleton
     @Provides
@@ -27,9 +32,9 @@ object TestNetworkModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(client: OkHttpClient): Retrofit {
+    fun provideRetrofit(client: OkHttpClient, baseUrl: String): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(mockBaseUrl) // Use MockWebServer URL
+            .baseUrl(baseUrl)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

@@ -19,7 +19,9 @@ android {
         versionCode = 2
         versionName = "1.2"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+      //  testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.seth.pitstopparadise.HiltTestRunner"
+
     }
 
     buildTypes {
@@ -165,7 +167,7 @@ dependencies {
     testImplementation(kotlin("test"))
 
     // Hilt testing for androidTest
-    androidTestImplementation("com.google.dagger:hilt-android-testing:2.57")
-    kaptAndroidTest("com.google.dagger:hilt-compiler:2.57")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.52")
+    kaptAndroidTest("com.google.dagger:hilt-compiler:2.52")
 
 }
