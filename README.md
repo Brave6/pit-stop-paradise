@@ -1,8 +1,7 @@
 # Pit Stop Paradise
 [![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/Brave6/pit-stop-paradise)
 
-Pit Stop Paradise is a native Android application designed for a recreational vehicle service center, such as a go-kart track or car wash. The app allows users to browse services, book appointments, view special offers, and manage their profiles. It is built with modern Android development practices, including MVVM architecture, Hilt for dependency injection, and Retrofit for network communication.
-
+Pit Stop Paradise is a native Android application designed for a theme park specializing in racing and karting experiences. The app allows users to browse rides and services, such as Turbo Kart 3000 for karting, Classic Cruiser Ride for a classic experience, and the Racing Simulator Pod for realistic racing simulation. Users can book appointments, view special offers, and manage their profiles. The app is built with modern Android development practices, including MVVM architecture, Hilt for dependency injection, and Retrofit for network communication.
 ## Features
 - **User Authentication**: Secure user registration and login functionality.
 - **Session Management**: Persistent login sessions using Jetpack DataStore.
@@ -93,3 +92,53 @@ To build and run the project, follow these steps:
 
 4.  **Build and Run:**
     Let Android Studio sync the Gradle files, then build and run the application on an emulator or a physical device.
+
+## Testing
+
+Pit Stop Paradise includes comprehensive **unit and UI tests** to ensure reliability and correctness.
+
+### Unit Tests
+
+#### **AuthViewModel**
+- Validates login logic for both **successful and failed credentials**.
+- Confirms **SessionManager** saves the token correctly after successful login.
+- Verifies that **state transitions** (`Idle`, `Loading`, `Success`, `Error`) are emitted in the correct order.
+- Handles **network exceptions** gracefully and emits appropriate error states.
+
+#### **BookingsViewModel**
+- Ensures `confirmBooking` handles:
+  - **Successful bookings** → emits `Success` state.
+  - **Incomplete or invalid input** → emits `Error` state.
+  - **API failures** → emits `Error` state with meaningful messages.
+- Uses **mocked BookingRepository** and **Retrofit responses** to simulate backend behavior.
+- Confirms **all state changes** are correctly reflected to the UI.
+
+#### **UserRepository**
+- Tests `getUserInfo` behavior for fetching user profile data.
+- Confirms correct **User object** is returned when API succeeds.
+- Throws an **exception** if no token is available.
+- Handles **unauthorized responses (401)** by clearing the session token and throwing a `Session expired` error.
+- Throws **generic errors** for other non-success HTTP responses, e.g., 500 server errors.
+- Uses **mocked ApiService** and **SessionManager** to simulate backend and session behavior.
+
+### UI Tests (Espresso)
+
+#### **LoginActivity**
+- Tests **login flow** with valid credentials.
+- Confirms **UI elements** (email, password, login button) are interactive.
+- Checks **loading indicators** and button enable/disable behavior during login.
+- Validates **proper error messages** are displayed for invalid credentials.
+
+#### **MainActivity & Navigation**
+- Verifies **BottomNavigationView** works correctly with **NavController**.
+- Confirms **fragment navigation** works as expected when selecting bottom menu items.
+- Ensures **UI states remain consistent** across navigation (e.g., back stack handling).
+
+### Tools & Libraries
+- **JUnit 4** – Unit testing framework.
+- **Espresso** – UI testing framework for interactions and assertions.
+- **MockWebServer** – Simulate backend API responses.
+- **Mockito / Mockito-Kotlin** – Mock repositories and verify interactions.
+- **Hilt Testing** – Provide dependency injection in test scenarios.
+- **Kotlin Coroutines Test** – Test suspend functions and `Flow` emissions.
+
