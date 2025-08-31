@@ -21,6 +21,17 @@
         android:orientation="vertical"
         android:padding="12dp">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.Material3.BodyLarge"
+            android:text="HOT!"
+            android:layout_gravity="end"
+            android:textColor="@color/white"
+            android:background="@drawable/badge_background"
+            android:padding="4dp"
+            android:textSize="12sp" />
+
         <ImageView
             android:id="@+id/imageProduct"
             android:layout_width="match_parent"
@@ -33,10 +44,9 @@
             android:id="@+id/textTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceHeadlineSmall"
             android:text="Turbo Kart 3000"
             android:textStyle="bold"
-            android:textColor="@color/black"
-            android:textSize="16sp"
             android:paddingTop="8dp"
             android:maxLines="1"
             android:ellipsize="end" />
@@ -45,34 +55,26 @@
             android:id="@+id/textPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textStyle="bold"
             android:text="₱150 / 15 mins"
-            android:textSize="14sp"
-            android:textColor="@color/colorPrimary"
             android:paddingTop="4dp" />
 
         <TextView
             android:id="@+id/textDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
             android:text="Drift like a pro on our safe and thrilling kart track!"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:textSize="13sp"
-            android:textColor="@color/grey"
             android:paddingTop="4dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonBook"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            style="@style/TextAppearance.PitStop.Button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorPrimary"
+            android:layout_height="48dp"
             android:text="Book Now"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:layout_marginTop="12dp"
-            app:strokeColor="@color/colorPrimary"
-            app:strokeWidth="1dp"
+            android:layout_marginTop="16dp"
             app:cornerRadius="12dp" />
 
     </LinearLayout>

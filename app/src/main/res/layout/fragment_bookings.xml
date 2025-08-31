@@ -1,88 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:padding="16dp"
     tools:context=".ui.fragment.BookingsFragment">
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingBottom="32dp">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:padding="16dp"
+        <!-- Product Image inside MaterialCard -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="#ECEFF1"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp">
 
             <ImageView
                 android:id="@+id/imageProduct"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:scaleType="fitCenter" />
+                android:layout_height="200dp"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/product_image"/>
+        </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:id="@+id/textTitle"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:paddingTop="8dp"
-                android:textColor="@color/black"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+        <!-- Title -->
+        <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:textColor="?attr/colorOnBackground"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            android:text="Product Title"/>
 
-            <TextView
-                android:id="@+id/textPrice"
-                android:textSize="16sp"
-                android:textColor="@color/black"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+        <!-- Price -->
+        <TextView
+            android:id="@+id/textPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorPrimary"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:text="₱1,500"/>
 
-            <!-- Date Picker -->
-            <EditText
+        <!-- Date Picker -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:hintEnabled="true"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxStrokeColor="#1C312E"
+            app:boxBackgroundColor="@android:color/white">
+
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
                 android:hint="Select Date"
-                android:focusable="false"
-                android:textColorHint="@color/grey"
-                android:textColor="@color/black"
-                android:layout_marginTop="12dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:inputType="none"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Time Slot -->
-            <EditText
+        <!-- Time Slot -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:hintEnabled="true"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxBackgroundColor="@android:color/white"
+            app:boxStrokeColor="#1C312E">
+
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTimeSlot"
-                android:hint="Select Time Slot"
-                android:textColorHint="@color/grey"
-                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:focusable="false"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:hint="Select Time Slot"
+                android:inputType="none"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- User Info -->
-            <EditText
+        <!-- User Name -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxStrokeColor="#1C312E"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:boxBackgroundColor="@android:color/white"
+            android:layout_marginTop="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="Your Name"
-                android:textColorHint="@color/grey"
-                android:textColor="@color/black"
-                android:layout_marginTop="12dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:inputType="textPersonName"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
+        <!-- Phone -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxBackgroundColor="@android:color/white"
+            app:boxStrokeColor="#1C312E"
+            android:layout_marginTop="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="Phone Number"
-                android:textColorHint="@color/grey"
-                android:textColor="@color/black"
-                android:inputType="phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:inputType="phone"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Confirm Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonConfirmBooking"
-                android:text="Confirm Booking"
-                android:textColorHint="@color/grey"
-                android:layout_marginTop="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+        <!-- Confirm Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonConfirmBooking"
+            style="@style/TextAppearance.PitStop.Button"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            app:cornerRadius="12dp"
+            android:layout_marginTop="24dp"
+            android:text="Confirm Booking"
+            />
+
+        <View
+            android:id="@+id/bottomSpacer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="gone"/>
+
+    </LinearLayout>
 </ScrollView>
-
-

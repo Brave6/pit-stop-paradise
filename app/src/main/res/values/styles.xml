@@ -16,4 +16,10 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="Widget.PitStop.BottomNavigation.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">?attr/colorPrimaryContainer</item>
+        <item name="android:alpha">0.2</item>
+    </style>
+
+
 </resources>

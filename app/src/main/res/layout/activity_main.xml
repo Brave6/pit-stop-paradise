@@ -24,12 +24,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:itemIconSize="35dp"
+        app:itemIconSize="24dp"
         android:background="@color/white"
+        app:elevation="8dp"
         app:menu="@menu/bottom_nav_menu"
         app:labelVisibilityMode="labeled"
         app:itemActiveIndicatorStyle="@color/white"
-        app:itemRippleColor="@color/material_dynamic_neutral99"
+        app:itemRippleColor="?attr/colorOnSurfaceVariant"
         app:itemIconTint="@color/bottom_nav_color_selector"
         app:itemTextColor="@color/bottom_nav_color_selector" />
 

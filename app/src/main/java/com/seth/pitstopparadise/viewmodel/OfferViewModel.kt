@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.seth.pitstopparadise.domain.model.Offer
 import com.seth.pitstopparadise.domain.repository.OfferRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,8 +26,10 @@ class OffersViewModel @Inject constructor(
 
     fun fetchOffers() {
         viewModelScope.launch {
+            _state.value = OffersUiState.Loading
             try {
                 val offers = offerRepository.getOffers()
+                delay(1700)
                 if (!offers.isNullOrEmpty()) {
                     _state.value = OffersUiState.Success(offers)
                 } else {
@@ -37,6 +40,7 @@ class OffersViewModel @Inject constructor(
             }
         }
     }
+
 
 
     sealed class OffersUiState {

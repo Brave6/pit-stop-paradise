@@ -87,7 +87,7 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(androidx.lifecycle.Lifecycle.State.STARTED) {
                 while (true) {
-                    kotlinx.coroutines.delay(3000)
+                    kotlinx.coroutines.delay(4000)
                     if (productAdapter.itemCount > 0) {
                         currentPosition = (currentPosition + 1) % productAdapter.itemCount
                         binding.productRecyclerView.smoothScrollToPosition(currentPosition)

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.facebook.shimmer.ShimmerFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/shimmerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:clipToPadding="false">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="6dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Title -->
+            <View
+                android:layout_width="180dp"
+                android:layout_height="20dp"
+                android:background="@drawable/shimmer_placeholder_bg" />
+
+            <!-- Description -->
+            <View
+                android:layout_width="220dp"
+                android:layout_height="16dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/shimmer_placeholder_bg" />
+
+            <!-- Discount -->
+            <View
+                android:layout_width="100dp"
+                android:layout_height="18dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/shimmer_placeholder_bg" />
+
+            <!-- Valid Until -->
+            <View
+                android:layout_width="140dp"
+                android:layout_height="14dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/shimmer_placeholder_bg" />
+
+            <!-- Book Now button -->
+            <View
+                android:layout_width="100dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/shimmer_placeholder_bg" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</com.facebook.shimmer.ShimmerFrameLayout>

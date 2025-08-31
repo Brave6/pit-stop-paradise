@@ -45,8 +45,16 @@ class BookingsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         val product = args.product
 
+        val params = binding.bottomSpacer.layoutParams
+        params.height = 150 // or calculate based on keyboard height
+        binding.bottomSpacer.layoutParams = params
+
+        binding.editPhone.setOnFocusChangeListener { _, hasFocus ->
+            binding.bottomSpacer.visibility = if (hasFocus) View.VISIBLE else View.GONE
+        }
         if (product != null) {
             // Display product info
             Glide.with(requireContext())

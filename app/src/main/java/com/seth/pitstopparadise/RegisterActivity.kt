@@ -6,47 +6,41 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.textfield.TextInputEditText
 import com.seth.pitstopparadise.data.RegisterRequest
+import com.seth.pitstopparadise.databinding.ActivityRegisterBinding
 import com.seth.pitstopparadise.viewmodel.RegisterViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlin.getValue
 
 @AndroidEntryPoint
 class RegisterActivity : AppCompatActivity() {
 
-    private lateinit var username: TextInputEditText
-    private lateinit var email: TextInputEditText
-    private lateinit var password: TextInputEditText
-    private lateinit var confirmPassword: TextInputEditText
-    private lateinit var registerButton: MaterialButton
-
+    private lateinit var binding: ActivityRegisterBinding
     private val viewModel: RegisterViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        username = findViewById(R.id.etUsername)
-        email = findViewById(R.id.etEmail)
-        password = findViewById(R.id.etPassword)
-        confirmPassword = findViewById(R.id.etConfirmPassword)
-        registerButton = findViewById(R.id.btnRegister)
+        //Setup Toolbar with Back Button
+        binding.toolbar.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
 
-        registerButton.setOnClickListener {
+        //Register button click
+        binding.btnRegister.setOnClickListener {
             if (validateInputs()) {
                 val user = RegisterRequest(
-                    username = username.text.toString().trim(),
-                    email = email.text.toString().trim(),
-                    password = password.text.toString()
+                    username = binding.etUsername.text.toString().trim(),
+                    email = binding.etEmail.text.toString().trim(),
+                    password = binding.etPassword.text.toString()
                 )
                 viewModel.registerUser(user)
             }
         }
 
-        // 🔁 Observe result from ViewModel
+        //Observe result from ViewModel
         lifecycleScope.launchWhenStarted {
             viewModel.registerState.collectLatest { result ->
                 if (result.isNotBlank()) {
@@ -58,10 +52,10 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun validateInputs(): Boolean {
-        val user = username.text.toString().trim()
-        val mail = email.text.toString().trim()
-        val pass = password.text.toString()
-        val confirm = confirmPassword.text.toString()
+        val user = binding.etUsername.text.toString().trim()
+        val mail = binding.etEmail.text.toString().trim()
+        val pass = binding.etPassword.text.toString()
+        val confirm = binding.etConfirmPassword.text.toString()
 
         return when {
             user.isEmpty() || mail.isEmpty() || pass.isEmpty() || confirm.isEmpty() -> {

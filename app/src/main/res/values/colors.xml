@@ -7,4 +7,7 @@
     <color name="colorPrimaryDark">#1C312E</color>
     <color name="red">#E57373</color>
     <color name="pink">#F8BBD0</color>
+    <color name="transparent">#00000000</color>
+
+
 </resources>

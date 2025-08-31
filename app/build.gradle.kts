@@ -119,7 +119,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
     // --- Unit testing ---
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)

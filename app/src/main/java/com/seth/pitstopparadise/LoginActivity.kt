@@ -1,5 +1,6 @@
 package com.seth.pitstopparadise
 
+import android.animation.Animator
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -18,6 +19,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlin.getValue
+import android.view.animation.AnimationUtils
+import android.view.animation.Animation
+
 
 
 @AndroidEntryPoint
@@ -51,34 +55,67 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
 
-        // ✅ Using repeatOnLifecycle for safer state collection
+        //Using repeatOnLifecycle for safer state collection
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 authViewModel.loginState.collectLatest { state ->
                     when (state) {
                         is LoginUiState.Idle -> {
-                            binding.progressBar?.isVisible = false
+                            showLoading(false)
                             binding.loginBtnLogin.isEnabled = true
                         }
                         is LoginUiState.Loading -> {
-                            binding.progressBar?.isVisible = true
+                            showLoading(true)
                             binding.loginBtnLogin.isEnabled = false
                         }
                         is LoginUiState.Success -> {
-                            binding.progressBar?.isVisible = false
                             binding.loginBtnLogin.isEnabled = true
-                            showToast("Login successful")
-                            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                            finish()
+                            binding.loadingAnimation.repeatCount = 0
+                            binding.loadingAnimation.addAnimatorListener(object : Animator.AnimatorListener {
+                                override fun onAnimationStart(animation: Animator) {}
+                                override fun onAnimationEnd(animation: Animator) {
+                                    binding.loadingAnimation.removeAnimatorListener(this)
+                                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                                    showToast("Login successful")
+                                    finish()
+                                }
+                                override fun onAnimationCancel(animation: Animator) {}
+                                override fun onAnimationRepeat(animation: Animator) {}
+                            })
                         }
                         is LoginUiState.Error -> {
-                            binding.progressBar?.isVisible = false
+                            showLoading(false)
                             binding.loginBtnLogin.isEnabled = true
                             showToast("Login failed: ${state.message}")
                         }
                     }
                 }
             }
+        }
+    }
+
+    private fun showLoading(show: Boolean) {
+        val overlay = binding.loadingOverlay
+        val anim = binding.loadingAnimation
+
+        if (show && overlay.visibility != View.VISIBLE) {
+            anim.speed = 2.5f // faster animation
+            anim.repeatCount = 0
+
+            overlay.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in))
+            overlay.visibility = View.VISIBLE
+            anim.playAnimation()
+        } else if (!show && overlay.isVisible) {
+            val fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out)
+            fadeOut.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: android.view.animation.Animation?) {}
+                override fun onAnimationEnd(animation: android.view.animation.Animation?) {
+                    overlay.visibility = View.GONE
+                    anim.pauseAnimation()
+                }
+                override fun onAnimationRepeat(animation: android.view.animation.Animation?) {}
+            })
+            overlay.startAnimation(fadeOut)
         }
     }
 
