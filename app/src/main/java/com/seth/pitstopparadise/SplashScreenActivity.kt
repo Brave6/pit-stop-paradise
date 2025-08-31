@@ -16,7 +16,8 @@ class SplashScreenActivity : AppCompatActivity() {
 
     private val splashDelay = 1000L // 1 second
 
-    @Inject lateinit var sessionManager: SessionManager
+    @Inject
+    lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,12 +33,20 @@ class SplashScreenActivity : AppCompatActivity() {
 
             val token = sessionManager.token.first()
 
-            if (token.isNullOrEmpty()) {
-                startActivity(Intent(this@SplashScreenActivity, LoginActivity::class.java))
+            val intent = if (token.isNullOrEmpty()) {
+                // No session → show GetStartedFragment first
+                Intent(this@SplashScreenActivity, MainActivity::class.java).apply {
+                    putExtra("SHOW_GET_STARTED", true)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
             } else {
-                startActivity(Intent(this@SplashScreenActivity, MainActivity::class.java))
+                // Already logged in → go straight to main content
+                Intent(this@SplashScreenActivity, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
             }
 
+            startActivity(intent)
             overridePendingTransition(0, 0)
             finish()
         }

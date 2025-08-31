@@ -43,13 +43,19 @@
                 app:argType="com.seth.pitstopparadise.domain.model.Product"
                 app:nullable="true"
                 android:defaultValue="@null"/>
-        </action>    </fragment>
-
+        </action>
+    </fragment>
 
     <fragment
         android:id="@+id/nav_profile"
         android:name="com.seth.pitstopparadise.ui.fragment.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/getStartedFragment"
+        android:name="com.seth.pitstopparadise.ui.fragment.GetStartedFragment"
+        android:label="fragment_get_started"
+        tools:layout="@layout/fragment_get_started" />
 
 </navigation>

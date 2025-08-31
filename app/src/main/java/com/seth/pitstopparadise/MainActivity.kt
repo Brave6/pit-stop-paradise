@@ -1,7 +1,9 @@
 package com.seth.pitstopparadise
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -13,15 +15,26 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Find NavHostFragment
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-
-        // Get NavController from it
         val navController = navHostFragment.navController
 
-        // Set up BottomNavigationView with NavController
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
         bottomNav.setupWithNavController(navController)
+
+
+        // Hide bottom nav on specific fragments
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            bottomNav.isVisible = destination.id != R.id.getStartedFragment
+        }
+
+        // Check if we should show GetStartedFragment
+        val showGetStarted = intent.getBooleanExtra("SHOW_GET_STARTED", false)
+        if (showGetStarted) {
+            // Navigate to GetStartedFragment
+            val navHostFragment = supportFragmentManager
+                .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            navHostFragment.navController.navigate(R.id.getStartedFragment)
+        }
     }
 }
