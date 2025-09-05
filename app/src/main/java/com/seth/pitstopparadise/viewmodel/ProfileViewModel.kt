@@ -36,11 +36,12 @@ class ProfileViewModel @Inject constructor(
 
     fun loadUserInfo() {
         viewModelScope.launch {
-            try {
-                val user = userRepository.getUserInfo()
+            val result = userRepository.getUserInfo()
+
+            result.onSuccess { user ->
                 _userInfo.value = user
-            } catch (e: Exception) {
-                if (e.localizedMessage?.contains("401") == true || e.localizedMessage?.contains("Session expired") == true) {
+            }.onFailure { e ->
+                if (e.message?.contains("Session expired", ignoreCase = true) == true) {
                     sessionManager.clearToken()
                     _sessionExpired.value = true
                 } else {
@@ -49,7 +50,6 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
-
 
     fun loadBookingHistory() {
         viewModelScope.launch {

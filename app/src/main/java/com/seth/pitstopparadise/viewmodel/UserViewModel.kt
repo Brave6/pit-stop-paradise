@@ -20,7 +20,7 @@ class UserViewModel @Inject constructor(
         object Loading : ProfileUiState()
         data class Success(val profile: ProfileResponse) : ProfileUiState()
         data class Error(val message: String) : ProfileUiState()
-        object SessionExpired : ProfileUiState() // ✅ Handle token expiration
+        object SessionExpired : ProfileUiState()
     }
 
     private val _profileState = MutableStateFlow<ProfileUiState>(ProfileUiState.Idle)
@@ -29,8 +29,10 @@ class UserViewModel @Inject constructor(
     fun fetchProfile() {
         viewModelScope.launch {
             _profileState.value = ProfileUiState.Loading
-            try {
-                val user = userRepository.getUserInfo()
+
+            val result = userRepository.getUserInfo()
+
+            result.onSuccess { user ->
                 _profileState.value = ProfileUiState.Success(
                     ProfileResponse(
                         _id = user.id,
@@ -38,16 +40,16 @@ class UserViewModel @Inject constructor(
                         username = user.username
                     )
                 )
-            } catch (e: Exception) {
-                if (e.localizedMessage?.contains("Session expired") == true) {
-                    _profileState.value = ProfileUiState.SessionExpired // ✅ trigger redirect in UI
+            }.onFailure { error ->
+                val message = error.message ?: "Unknown error"
+                if (message.contains("Session expired", ignoreCase = true)) {
+                    _profileState.value = ProfileUiState.SessionExpired
                 } else {
-                    _profileState.value = ProfileUiState.Error("Error: ${e.localizedMessage}")
+                    _profileState.value = ProfileUiState.Error("Error: $message")
                 }
             }
         }
     }
-
 
     fun resetState() {
         _profileState.value = ProfileUiState.Idle

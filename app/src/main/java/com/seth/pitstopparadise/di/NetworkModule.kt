@@ -9,6 +9,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -24,8 +25,16 @@ object NetworkModule {
         return OkHttpClient.Builder()
             .followRedirects(true)
             .followSslRedirects(true)
-            .sslSocketFactory(TrustAllCertificates.sslSocketFactory, TrustAllCertificates.trustManager)
+            .sslSocketFactory(
+                TrustAllCertificates.sslSocketFactory,
+                TrustAllCertificates.trustManager
+            )
             .hostnameVerifier { _, _ -> true }
+            // Timeout settings for Render cold starts
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
+            .callTimeout(60, TimeUnit.SECONDS)
             .build()
     }
 

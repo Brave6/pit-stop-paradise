@@ -35,11 +35,6 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        window.decorView.systemUiVisibility =
-            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
-                    View.SYSTEM_UI_FLAG_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-
         binding.loginBtnLogin.setOnClickListener {
             val email = binding.loginUsername.text.toString().trim()
             val password = binding.loginPassword.text.toString().trim()
