@@ -2,6 +2,13 @@
 [![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/Brave6/pit-stop-paradise)
 
 Pit Stop Paradise is a native Android application designed for a theme park specializing in racing and karting experiences. The app allows users to browse rides and services, such as Turbo Kart 3000 for karting, Classic Cruiser Ride for a classic experience, and the Racing Simulator Pod for realistic racing simulation. Users can book appointments, view special offers, and manage their profiles. The app is built with modern Android development practices, including MVVM architecture, Hilt for dependency injection, and Retrofit for network communication.
+
+The project features a full-stack setup:
+
+Android Frontend built with Kotlin, MVVM, and Jetpack libraries.
+
+Custom Backend powered by Node.js + Express, deployed on Render, and connected to MongoDB Atlas.
+
 ## Features
 - **User Authentication**: Secure user registration and login functionality.
 - **Session Management**: Persistent login sessions using Jetpack DataStore.
@@ -29,7 +36,8 @@ Pit Stop Paradise is powered by a custom backend:
 - **Server:** Node.js (Express) for RESTful API development  
 - **Database:** MongoDB Atlas for secure, cloud-hosted data storage  
 - **Authentication:** JWT (JSON Web Token) for secure, stateless authentication  
-- **Deployment:** API endpoints integrated with the Android app using Retrofit  
+- **Deployment:** API endpoints integrated with the Android app using Retrofit
+- **Render:** for cloud deployment  
 
 ## Project Structure
 The project is organized into modular packages, following clean architecture principles:
@@ -49,7 +57,8 @@ The project is organized into modular packages, following clean architecture pri
 ## Tech Stack  
 
 - **Frontend (Android App):** Kotlin, XML, MVVM, Hilt, Retrofit, Jetpack Navigation, DataStore  
-- **Backend (API):** Node.js, Express, JWT Authentication  
+- **Backend (API):** Node.js, Express, JWT Authentication
+- **Hosting:** Render (API)  
 - **Database:** MongoDB Atlas (cloud-based, scalable storage)  
 
 ## Accessibility (TalkBack Support)
